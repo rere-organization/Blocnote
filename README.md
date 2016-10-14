@@ -11,7 +11,6 @@ A simple application for mobile which is a Bloc Note.
 - Action
   - Database
     - Id
-    - Title (optional)
     - Texts
     - Favorite
     - Date
@@ -24,6 +23,5 @@ A simple application for mobile which is a Bloc Note.
       - Delete a note
       
   - Bloc note layout
-      - Title (optional)
       - Text
       - Possibility of a list
