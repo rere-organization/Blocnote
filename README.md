@@ -11,6 +11,7 @@ A simple application for mobile which is a Bloc Note.
 - Action
   - Database
     - Id
+    - Title
     - Texts
     - Favorite
     - Date
