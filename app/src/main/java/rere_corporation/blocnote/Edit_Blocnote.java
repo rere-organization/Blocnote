@@ -2,6 +2,8 @@ package rere_corporation.blocnote;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,6 +33,7 @@ public class Edit_Blocnote extends Activity {
         validate = (Button)findViewById(R.id.validate);
         cancel   = (Button)findViewById(R.id.cancel);
 
+        // If the button cancel is put
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -39,8 +42,25 @@ public class Edit_Blocnote extends Activity {
 
         });
 
+        // If the button validate is put
+        validate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Save_data();
+            }
+        });
 
     }
+
+
+    private void Save_data(){
+
+        Blocnote.insert();
+
+        // Insert in the database
+        // Blocnote.insert(this);
+    }
+
 
 
     private void Leave_editor(EditText note){
