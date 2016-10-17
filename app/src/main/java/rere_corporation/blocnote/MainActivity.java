@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); /* edit_blocnote */
+        setContentView(R.layout.fragment_listblocnote); /* edit_blocnote */
 
         add_blocnote = (Button) findViewById(R.id.addBlocnote);
 
@@ -27,6 +27,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        // Show notes already present
+        listblocnote listblocnote = new listblocnote();
+
+
+    }
 
     private void Add_Blocnote(){
         Intent intent = new Intent(this, Edit_Blocnote.class);

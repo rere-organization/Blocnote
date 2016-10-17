@@ -20,7 +20,7 @@ public class Blocnote {
 
 
 
-
+    // Creating the list of all the notes
     public static ArrayList<Blocnote> getBlocnoteList (Context context){
 
         ArrayList<Blocnote> listBlocnote = new ArrayList<>();
@@ -43,7 +43,7 @@ public class Blocnote {
 
 
 
-    Blocnote(Cursor cursor){
+    private Blocnote(Cursor cursor){
         id = cursor.getInt(cursor.getColumnIndex("id"));
         title = cursor.getString(cursor.getColumnIndex("title"));
         note = cursor.getString(cursor.getColumnIndex("text"));

@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,21 +48,42 @@ public class Edit_Blocnote extends Activity {
         validate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                Save_data();
+                // Insert in the database
+                /*
+                Context context;
+                context = getApplicationContext();
+                Blocnote.this.insert(context);
+                */
+                /*
+                Blocnote.insert(context);
+                 */
+
+
+
+                ContentValues values = new ContentValues();
+
+                values.put("text", String.valueOf(note.getText()));
+                values.put("favorite", false);
+
+                /**
+                 * id INTEGER PRIMARY KEY," +
+                 "title TEXT, text TEXT, favorite BOOLEAN, date NUMERIC
+                 */
+
+
+                /* String whereClause = "id=" + String.valueOf(this.id); */
+
+                LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(getApplicationContext());
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                db.update("NOTE", values, null, null);
+                db.close();
+
+                Edit_Blocnote.this.finish();
             }
         });
 
     }
-
-
-    private void Save_data(){
-
-        Blocnote.insert();
-
-        // Insert in the database
-        // Blocnote.insert(this);
-    }
-
 
 
     private void Leave_editor(EditText note){
