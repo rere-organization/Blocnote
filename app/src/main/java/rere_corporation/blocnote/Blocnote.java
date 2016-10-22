@@ -4,8 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import android.widget.EditText;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by rere on 15/10/16.
@@ -14,11 +20,11 @@ import java.util.ArrayList;
 public class Blocnote {
     // Composition of the database Blocnote
     long id;
-    String title;
     String note;
     Boolean favorite;
+    String date;
 
-
+/**
 
     // Creating the list of all the notes
     public static ArrayList<Blocnote> getBlocnoteList (Context context){
@@ -72,35 +78,83 @@ public class Blocnote {
         return blocnote;
     }
 
+*/
 
-    public void insert(Context context){
+
+    public static void insert(Context context, EditText note) {
+        /**********************************************************************************
+         * Function      : insert
+         * Prerequisites : Have : String "note" / Context
+         * Action        : Select all arguments for the request
+         *                 And execute the request
+         * Strategy      : Arguments : id / note / favorite / date
+         *                 Put to the table 'NOTE'
+         *********************************************************************************/
+
         ContentValues values = new ContentValues();
 
-        values.put("text", this.note);
-        values.put("favorite", false);
+        // Generate the date
+        SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String strDate = date_format.format(new Date());
 
-        /**
-         * id INTEGER PRIMARY KEY," +
-         "title TEXT, text TEXT, favorite BOOLEAN, date NUMERIC
-         */
+        // Call the database
+        LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(context);
+        SQLiteDatabase db = helper.getWritableDatabase();
 
+        // Put to 'values' all the data
+        values.put("favorite", Boolean.FALSE);
+        values.put("date", strDate);
+        values.put("note", String.valueOf(note.getText()));
 
-        String whereClause = "id=" + String.valueOf(this.id);
+        // Insert to the database
+        db.insert("NOTE", null, values);
+        db.close();
+
+    }
+
+    public static void select(Context context, long id){
+        String Request;
 
         LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();
 
-        db.update("NOTE", values, whereClause, null);
+        Request = "SELECT * FROM NOTE WHERE id = " + id + ";";
+
+        db.execSQL(Request);
         db.close();
+
+    }
+
+    private Blocnote(Cursor cursor){
+        id = cursor.getInt(cursor.getColumnIndex("id"));
+        favorite = cursor.getInt(cursor.getColumnIndex("favorite")) > 0;
+        note = cursor.getString(cursor.getColumnIndex("note"));
+        date = cursor.getString(cursor.getColumnIndex("date"));
+    }
+
+
+    public static ArrayList<Blocnote> getBlocnoteList(Context context){
+        ArrayList<Blocnote> listBlocnote = new ArrayList<>();
+
+        LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(context);
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+
+        Cursor cursor = db.query(true, "NOTE", new String[]{"id", "favorite", "note", "date"}, null, null, null, null, "date", null );
+
+        while (cursor.moveToNext()) {
+            listBlocnote.add(new Blocnote(cursor));
+        }
+
+        cursor.close();
+        db.close();
+
+        return listBlocnote;
     }
 
 
     public long getId() {
         return id;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public String getNote() {
@@ -111,12 +165,10 @@ public class Blocnote {
         return favorite;
     }
 
+    public String getDate(){ return date; }
+
     public void setId(long id) {
         this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public void setNote(String note) {

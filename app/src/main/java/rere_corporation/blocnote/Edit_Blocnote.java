@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.LogPrinter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,11 @@ import android.widget.EditText;
  */
 
 public class Edit_Blocnote extends Activity {
+    /**********************************************************************************
+     * Class    : Edit_Blocnote
+     * Action   :
+     * Strategy :
+     *********************************************************************************/
 
     // Déclare élements
     EditText note;
@@ -48,38 +55,7 @@ public class Edit_Blocnote extends Activity {
         validate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                // Insert in the database
-                /*
-                Context context;
-                context = getApplicationContext();
-                Blocnote.this.insert(context);
-                */
-                /*
-                Blocnote.insert(context);
-                 */
-
-
-
-                ContentValues values = new ContentValues();
-
-                values.put("text", String.valueOf(note.getText()));
-                values.put("favorite", false);
-
-                /**
-                 * id INTEGER PRIMARY KEY," +
-                 "title TEXT, text TEXT, favorite BOOLEAN, date NUMERIC
-                 */
-
-
-                /* String whereClause = "id=" + String.valueOf(this.id); */
-
-                LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(getApplicationContext());
-                SQLiteDatabase db = helper.getWritableDatabase();
-
-                db.update("NOTE", values, null, null);
-                db.close();
-
-                Edit_Blocnote.this.finish();
+                Add_note(note);
             }
         });
 
@@ -87,6 +63,14 @@ public class Edit_Blocnote extends Activity {
 
 
     private void Leave_editor(EditText note){
+        /**********************************************************************************
+         * Function      : Leave_editor
+         * Prerequisites : Button "cancel" must be activated
+         * Action        : If there are no text, leave the editor
+         *                 Else, create a confirmation menu
+         * Strategy      : Compare the text of the layout "note"
+         *                 Create a AlertDialog with two choices (yes/no)
+         *********************************************************************************/
 
         String txt = note.getText().toString();
 
@@ -127,5 +111,39 @@ public class Edit_Blocnote extends Activity {
 
         }
     }
+
+    private void Add_note (EditText note){
+        /**********************************************************************************
+         * Function      : Add_note
+         * Prerequisites : Button "validate" must be activated
+         * Action        : If there are no text quit the editor
+         *                 Else, save the note in the database
+         * Strategy      : Compare the text of the layout "note"
+         *                 Data recovery and sends to the database
+         *********************************************************************************/
+
+        // Text recovery
+        String txt_note = note.getText().toString();
+
+        // Compare the value
+        if (txt_note.isEmpty()){
+            // Finish the editor mode
+            Edit_Blocnote.this.finish();
+        }
+        // Add to the database
+        else{
+            // Get the context
+            Context context;
+            context = getApplicationContext();
+
+            // Insert data in the database
+            Blocnote.insert(context, note);
+
+            // Finish the editor mode
+            Edit_Blocnote.this.finish();
+        }
+
+    }
+
 
 }
