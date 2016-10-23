@@ -18,34 +18,37 @@ public class BlocnoteAdapter extends ArrayAdapter<Blocnote> {
 
     Context context;
 
-    public BlocnoteAdapter(Context context, List<Blocnote> objects){
-        super(context, -1, objects);
-        this.context = context;
-
+    public BlocnoteAdapter(Context context, List<Blocnote> blocnotes){
+        super(context, 0, blocnotes);
     }
 
     @Override
-    public View getView(int pos, View convertView, ViewGroup parent){
-        View view = null;
+    public View getView(int position, View convertView, ViewGroup parent){
 
-        if(convertView == null){
-            LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.listblocnote, null);
-        }
-        else{
-            view = convertView;
+        if(convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.listblocnote, parent, false);
         }
 
-        Blocnote blocnote = getItem(pos);
+        BlocnoteViewHolder viewHolder = (BlocnoteViewHolder) convertView.getTag();
 
-        view.setTag(blocnote);
+        if(viewHolder == null) {
+            viewHolder = new BlocnoteViewHolder();
+            viewHolder.note = (TextView) convertView.findViewById(R.id.listItemBlocnote_note);
+            convertView.setTag(viewHolder);
+        }
 
-        TextView note = (TextView)view.findViewById(R.id.listItemBlocnote_note);
+        Blocnote blocnote = getItem(position);
 
-        note.setText(blocnote.getNote());
+        viewHolder.note.setText(blocnote.getNote());
 
-        return view;
+        return convertView;
 
+
+
+    }
+
+    private class BlocnoteViewHolder{
+        public TextView note;
     }
 
 

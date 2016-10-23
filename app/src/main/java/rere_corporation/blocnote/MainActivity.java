@@ -1,5 +1,6 @@
 package rere_corporation.blocnote;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.Fragment;
@@ -9,13 +10,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.R.id.list;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
     /***************************************************************
      * Class    : MainActivity
      * Action   : List of all the Blocnote present in the database
@@ -25,17 +29,28 @@ public class MainActivity extends FragmentActivity {
      *            Genere the l
     ***************************************************************/
 
-
-    // Button for add a blocnote //
+    // Variables for elements
     Button add_blocnote;
+    ListView Listnote;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_listblocnote); /* edit_blocnote */
+        setContentView(R.layout.activity_main);
 
-        // Declaration of the button
+
+        // Declaration of the button and the list
         add_blocnote = (Button) findViewById(R.id.addBlocnote);
+        Listnote     = (ListView) findViewById(R.id.main_List);
+
+
+        // Generate the array of all notes
+        ArrayList<Blocnote> blocnotes = genererNotes();
+
+        BlocnoteAdapter adapter = new BlocnoteAdapter(MainActivity.this, blocnotes);
+        Listnote.setAdapter(adapter);
+
 
         // If the button is clicked
         add_blocnote.setOnClickListener(new View.OnClickListener(){
@@ -45,31 +60,21 @@ public class MainActivity extends FragmentActivity {
                 Add_Blocnote();
             }
         });
+
     }
 
+    private ArrayList<Blocnote> genererNotes(){
+        /*************************************************************
+         * Function : genererNotes
+         * Action   : Generate all the notes present in the database
+         *            to an array
+         * Strategy : Call the funciton "getBlocnoteList" present
+         *            in the class Blocnote
+         ************************************************************/
 
-    @Override
-    public void onResume(){
-        super.onResume();
+        ArrayList<Blocnote> blocnoteList = Blocnote.getBlocnoteList(this);
 
-        // Create the list of all note
-        listblocnote listblocnote = new listblocnote();
-
-        ArrayList<Blocnote> blocnotelist = Blocnote.getBlocnoteList(this);
-        BlocnoteAdapter blocnoteAdapter = new BlocnoteAdapter(this, blocnotelist);
-
-
-
-
-       // openFragment(listblocnote);
-
-
-
-        //        ArrayList<DVD> dvdList = DVD.getDVDList(this);
-//        DVDAdapter dvdAdapter = new DVDAdapter(this, dvdList);
-//        list.setAdapter(dvdAdapter);
-        // openFragment(listblocnote);
-
+        return blocnoteList;
     }
 
 
@@ -83,15 +88,5 @@ public class MainActivity extends FragmentActivity {
         Intent intent = new Intent(this, Edit_Blocnote.class);
         startActivity(intent);
     }
-/**
-    private void openFragment (Fragment fragment){
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.main_placeHolder, fragment);
-        transaction.addToBackStack(null);
-
-        transaction.commit();
-    }
-*/
 }

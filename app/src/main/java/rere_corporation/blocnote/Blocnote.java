@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,6 +24,8 @@ public class Blocnote {
     String note;
     Boolean favorite;
     String date;
+
+    public TextView note_text;
 
 /**
 
@@ -134,14 +137,25 @@ public class Blocnote {
 
 
     public static ArrayList<Blocnote> getBlocnoteList(Context context){
+        /**********************************************************************************
+         * Function      : getBlocnoteList
+         * Prerequisites : Return "ArrayList<Blocnote>"
+         * Action        : Select all notes present in the database and save add to an array
+         * Strategy      : Arguments : id / note / favorite / date
+         *                 Create a loop for all elements and with a cursor recuperate
+         *                 all data for each columns
+         *********************************************************************************/
+
         ArrayList<Blocnote> listBlocnote = new ArrayList<>();
 
+        // Call the database
         LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
 
-
+        // Create the request
         Cursor cursor = db.query(true, "NOTE", new String[]{"id", "favorite", "note", "date"}, null, null, null, null, "date", null );
 
+        // Add to the array all notes
         while (cursor.moveToNext()) {
             listBlocnote.add(new Blocnote(cursor));
         }
