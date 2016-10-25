@@ -44,14 +44,6 @@ public class MainActivity extends Activity {
         add_blocnote = (Button) findViewById(R.id.addBlocnote);
         Listnote     = (ListView) findViewById(R.id.main_List);
 
-
-        // Generate the array of all notes
-        ArrayList<Blocnote> blocnotes = genererNotes();
-
-        BlocnoteAdapter adapter = new BlocnoteAdapter(MainActivity.this, blocnotes);
-        Listnote.setAdapter(adapter);
-
-
         // If the button is clicked
         add_blocnote.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -61,6 +53,17 @@ public class MainActivity extends Activity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        // Generate the array of all notes
+        ArrayList<Blocnote> blocnotes = genererNotes();
+
+        BlocnoteAdapter adapter = new BlocnoteAdapter(MainActivity.this, blocnotes);
+        Listnote.setAdapter(adapter);
     }
 
     private ArrayList<Blocnote> genererNotes(){

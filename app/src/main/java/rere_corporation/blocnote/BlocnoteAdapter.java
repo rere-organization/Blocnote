@@ -34,21 +34,49 @@ public class BlocnoteAdapter extends ArrayAdapter<Blocnote> {
         if(viewHolder == null) {
             viewHolder = new BlocnoteViewHolder();
             viewHolder.note = (TextView) convertView.findViewById(R.id.listItemBlocnote_note);
+            viewHolder.favorite = (TextView) convertView.findViewById(R.id.listItemBlocnote_favorie);
+            viewHolder.date = (TextView) convertView.findViewById(R.id.listItemBlocnote_date);
             convertView.setTag(viewHolder);
         }
 
         Blocnote blocnote = getItem(position);
 
+
+        // Note
         viewHolder.note.setText(blocnote.getNote());
 
-        return convertView;
+        // Favorite
+        Boolean value = blocnote.getFavorite();
 
+        if (value == true){
+            viewHolder.favorite.setText("Oui");
+        }
+        else{
+            viewHolder.favorite.setText("Non");
+        }
+
+
+        // Date | Format = AAAA-MM-DD HH:MM:SS
+
+        // Get the content of the date
+        String Date_String = blocnote.getDate();
+        // Split
+        String[] date_text = Date_String.split("-");
+
+        // Set the text
+        viewHolder.date.setText(date_text[1] + "/" + date_text[2]);
+
+
+
+        return convertView;
 
 
     }
 
     private class BlocnoteViewHolder{
         public TextView note;
+        public TextView favorite;
+        public TextView date;
     }
 
 

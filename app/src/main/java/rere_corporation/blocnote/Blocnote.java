@@ -192,4 +192,8 @@ public class Blocnote {
     public void setFavorite(Boolean favorite) {
         this.favorite = favorite;
     }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }
