@@ -17,8 +17,8 @@
         </activity>
 
         <activity android:name=".Edit_Blocnote">
-
         </activity>
+
     </application>
 
 </manifest>
