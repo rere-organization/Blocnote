@@ -25,73 +25,13 @@ public class Blocnote {
     Boolean favorite;
     String date;
 
-    public TextView note_text;
-
-/**
-
-    // Creating the list of all the notes
-    public static ArrayList<Blocnote> getBlocnoteList (Context context){
-
-        ArrayList<Blocnote> listBlocnote = new ArrayList<>();
-
-        LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(context);
-        SQLiteDatabase db = helper.getReadableDatabase();
-
-        Cursor cursor = db.query(true, "Note", new String[]{"id", "title", "text", "favorite", "date"}, null,null,null,null,"date",null);
-
-        while (cursor.moveToNext()){
-            listBlocnote.add(new Blocnote(cursor));
-        }
-
-        cursor.close();
-        db.close();
-
-        return listBlocnote;
-
-    }
-
-
-
-    private Blocnote(Cursor cursor){
-        id = cursor.getInt(cursor.getColumnIndex("id"));
-        title = cursor.getString(cursor.getColumnIndex("title"));
-        note = cursor.getString(cursor.getColumnIndex("text"));
-        favorite = cursor.getInt(cursor.getColumnIndex("favorite")) > 0;
-    }
-
-
-    public static Blocnote getBlocnote (Context context, long id){
-        // Storing informations
-        Blocnote blocnote = null;
-
-        LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(context);
-        SQLiteDatabase db = helper.getReadableDatabase();
-
-        // Request to the database
-        String where = "id = " + String.valueOf(id);
-        Cursor cursor = db.query(true, "NOTE", new String[]{"id", "title", "text", "favorite"}, where,null,null,null,"title",null);
-
-        // Create a new entry for each block
-        if (cursor.moveToFirst())
-            blocnote = new Blocnote(cursor);
-
-        cursor.close();
-        db.close();
-
-        return blocnote;
-    }
-
-*/
-
-
     public static void insert(Context context, EditText note) {
         /**********************************************************************************
-         * Function      : insert
-         * Prerequisites : Have : String "note" / Context
-         * Action        : Select all arguments for the request
-         *                 And execute the request
-         * Strategy      : Arguments : id / note / favorite / date
-         *                 Put to the table 'NOTE'
+         * Insert into the database the note
+         *
+         * @param context
+         * @param note
+         *
          *********************************************************************************/
 
         ContentValues values = new ContentValues();
@@ -115,19 +55,6 @@ public class Blocnote {
 
     }
 
-    public static void select(Context context, long id){
-        String Request;
-
-        LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(context);
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        Request = "SELECT * FROM NOTE WHERE id = " + id + ";";
-
-        db.execSQL(Request);
-        db.close();
-
-    }
-
     private Blocnote(Cursor cursor){
         id = cursor.getInt(cursor.getColumnIndex("id"));
         favorite = cursor.getInt(cursor.getColumnIndex("favorite")) > 0;
@@ -138,12 +65,12 @@ public class Blocnote {
 
     public static ArrayList<Blocnote> getBlocnoteList(Context context){
         /**********************************************************************************
-         * Function      : getBlocnoteList
-         * Prerequisites : Return "ArrayList<Blocnote>"
-         * Action        : Select all notes present in the database and save add to an array
-         * Strategy      : Arguments : id / note / favorite / date
-         *                 Create a loop for all elements and with a cursor recuperate
-         *                 all data for each columns
+         * Select all notes present in the database and save add to an array
+         *
+         * @param context
+         *
+         * @return ArrayList<Blocnote>
+         *
          *********************************************************************************/
 
         ArrayList<Blocnote> listBlocnote = new ArrayList<>();
@@ -153,7 +80,7 @@ public class Blocnote {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         // Create the request
-        Cursor cursor = db.query(true, "NOTE", new String[]{"id", "favorite", "note", "date"}, null, null, null, null, "date", null );
+        Cursor cursor = db.query(true, "NOTE", new String[]{"id", "favorite", "note", "date"}, null, null, null, null, "date DESC", null );
 
         // Add to the array all notes
         while (cursor.moveToNext()) {
@@ -164,6 +91,93 @@ public class Blocnote {
         db.close();
 
         return listBlocnote;
+    }
+
+
+    public static void delete(Context context, long id){
+        /**********************************************************************************
+         * Delete the note in the database
+         *
+         * @param context
+         * @param id
+         *
+         *********************************************************************************/
+
+        String whereClause = "id= ?";
+        String[] whereArgs = new String[1];
+        whereArgs[0] = String.valueOf(id);
+
+        LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(context);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        db.delete("NOTE", whereClause, whereArgs);
+        db.close();
+
+    }
+
+
+    public static Blocnote getBlocnote (Context context, long id){
+        /**********************************************************************************
+         * Get the note, whose the id is the same
+         *
+         * @param context
+         * @param id
+         *
+         *********************************************************************************/
+
+        Blocnote blocnote = null;
+
+        LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(context);
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        // Request to the database
+        String where = "id = " + String.valueOf(id);
+        Cursor cursor = db.query(true, "NOTE", new String[]{"id", "favorite", "note", "date"}, where,null,null,null,null,null);
+
+        // Create a new entry for each block
+        if (cursor.moveToFirst())
+            blocnote = new Blocnote(cursor);
+
+        cursor.close();
+        db.close();
+
+        return blocnote;
+    }
+
+
+    public static void update(Context context, long id, EditText note){
+        /**********************************************************************************
+         * Update the note
+         *
+         * @param context
+         * @param id
+         * @param note
+         *
+         *********************************************************************************/
+
+        ContentValues values = new ContentValues();
+
+
+        // Generate the date
+        SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String strDate = date_format.format(new Date());
+
+
+        // Add the value
+        values.put("note", String.valueOf(note.getText()));
+        values.put("date", strDate);
+
+        // With the same id
+        String whereClause = "id=" + String.valueOf(id);
+
+
+        LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(context);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        // Request
+        db.update("NOTE", values, whereClause, null);
+        db.close();
+
     }
 
 

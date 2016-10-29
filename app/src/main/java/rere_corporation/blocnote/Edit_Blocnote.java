@@ -21,11 +21,6 @@ import android.widget.EditText;
  */
 
 public class Edit_Blocnote extends Activity {
-    /**********************************************************************************
-     * Class    : Edit_Blocnote
-     * Action   :
-     * Strategy :
-     *********************************************************************************/
 
     // Déclare élements
     EditText note;
@@ -38,11 +33,20 @@ public class Edit_Blocnote extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_blocnote);
 
+        final long id = getIntent().getExtras().getLong("id");
+
         note     = (EditText)findViewById(R.id.note);
         validate = (Button)findViewById(R.id.validate);
         cancel   = (Button)findViewById(R.id.cancel);
 
-        // If the button cancel is put
+
+        // Search to the database the information if the note exist
+        if(id != -1){
+            Blocnote noteExist = Blocnote.getBlocnote(getApplicationContext(), id);
+            note.setText(noteExist.getNote());
+        }
+
+        // Button Cancel
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -51,11 +55,11 @@ public class Edit_Blocnote extends Activity {
 
         });
 
-        // If the button validate is put
+        // Button Validate
         validate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                Add_note(note);
+                Add_note(note, id);
             }
         });
 
@@ -64,26 +68,24 @@ public class Edit_Blocnote extends Activity {
 
     private void Leave_editor(EditText note){
         /**********************************************************************************
-         * Function      : Leave_editor
-         * Prerequisites : Button "cancel" must be activated
-         * Action        : If there are no text, leave the editor
-         *                 Else, create a confirmation menu
-         * Strategy      : Compare the text of the layout "note"
-         *                 Create a AlertDialog with two choices (yes/no)
+         * @require Button cancel activate
+         *
+         * If there no text, leave the editor, else create an AlertDialog (yes/no)
          *********************************************************************************/
 
         String txt = note.getText().toString();
 
         // If there has no text
         if (txt.isEmpty()){
+            // End the editor menu
             Edit_Blocnote.this.finish();
         }
         // Do a confirmation
         else{
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
             builder.setMessage("Are you sure ?");
+
 
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
@@ -108,24 +110,24 @@ public class Edit_Blocnote extends Activity {
             AlertDialog alert = builder.create();
             alert.show();
 
-
         }
     }
 
-    private void Add_note (EditText note){
+    private void Add_note (EditText note, long id){
         /**********************************************************************************
-         * Function      : Add_note
-         * Prerequisites : Button "validate" must be activated
-         * Action        : If there are no text quit the editor
-         *                 Else, save the note in the database
-         * Strategy      : Compare the text of the layout "note"
-         *                 Data recovery and sends to the database
+         * @require Button validate activate
+         *
+         * Save the note into the database
+         *
+         * @param note
+         * @param id
+         *
          *********************************************************************************/
 
-        // Text recovery
+        // Get the text
         String txt_note = note.getText().toString();
 
-        // Compare the value
+        // No text
         if (txt_note.isEmpty()){
             // Finish the editor mode
             Edit_Blocnote.this.finish();
@@ -136,14 +138,16 @@ public class Edit_Blocnote extends Activity {
             Context context;
             context = getApplicationContext();
 
-            // Insert data in the database
-            Blocnote.insert(context, note);
-
+            if(id != -1){
+                Blocnote.update(context, id, note);
+            }
+            else {
+                // Insert data in the database
+                Blocnote.insert(context, note);
+            }
             // Finish the editor mode
             Edit_Blocnote.this.finish();
         }
-
     }
-
 
 }

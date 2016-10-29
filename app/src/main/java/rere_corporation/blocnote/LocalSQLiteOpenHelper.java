@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by rere on 14/10/16.
  *
  * *******  DataBase  *******
- * id / title / text / Favorite / Date
+ * id / text / Favorite / Date
  *
  */
 
