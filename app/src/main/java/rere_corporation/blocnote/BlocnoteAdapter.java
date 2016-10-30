@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -34,7 +35,8 @@ public class BlocnoteAdapter extends ArrayAdapter<Blocnote> {
         if(viewHolder == null) {
             viewHolder = new BlocnoteViewHolder();
             viewHolder.note = (TextView) convertView.findViewById(R.id.listItemBlocnote_note);
-            viewHolder.favorite = (TextView) convertView.findViewById(R.id.listItemBlocnote_favorie);
+            viewHolder.favorite = (ImageView) convertView.findViewById(R.id.listItemBlocnote_favorie);
+            viewHolder.favorite.setImageResource(R.drawable.favorite);
             viewHolder.date = (TextView) convertView.findViewById(R.id.listItemBlocnote_date);
             convertView.setTag(viewHolder);
         }
@@ -49,24 +51,36 @@ public class BlocnoteAdapter extends ArrayAdapter<Blocnote> {
         Boolean value = blocnote.getFavorite();
 
         if (value == true){
-            viewHolder.favorite.setText("Oui");
+
+            viewHolder.favorite.setAlpha(1f);
+            //  viewHolder.favorite.setText("Oui");
+           // viewHolder.favorite.setAlpha(0f);
         }
         else{
-            viewHolder.favorite.setText("Non");
+            viewHolder.favorite.setAlpha(0f);
+          //  viewHolder.favorite.setText("Non");
+            //viewHolder.favorite.setImageAlpha(1);
         }
 
 
-        // Date | Format = AAAA-MM-DD HH:MM:SS
+        // Date | Format = AAAA-MM-DD HH:MM:SS //
 
         // Get the content of the date
         String Date_String = blocnote.getDate();
-        // Split
-        String[] date_text = Date_String.split("-");
 
-        // Set the text
-        viewHolder.date.setText(date_text[1] + "/" + date_text[2]);
+        String[] Date_element = Date_String.split(" ");
+
+        // AAAA-MM-DD
+        String[] Date_day = Date_element[0].split("-");
+
+        // HH:MM:SS
+        String[] Date_heure = Date_element[1].split(":");
+
+        // Create the final element
+        String Display_date = Date_day[1] + "/" + Date_day[2] + " " + Date_heure[0] + ":" + Date_heure[1];
 
 
+        viewHolder.date.setText(Display_date);
 
         return convertView;
 
@@ -75,7 +89,7 @@ public class BlocnoteAdapter extends ArrayAdapter<Blocnote> {
 
     private class BlocnoteViewHolder{
         public TextView note;
-        public TextView favorite;
+        public ImageView favorite;
         public TextView date;
     }
 
