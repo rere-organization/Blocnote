@@ -1,33 +1,20 @@
 package rere_corporation.blocnote;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ClipData;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.util.LogPrinter;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 /**
  * Created by rere on 14/10/16.
@@ -120,8 +107,8 @@ public class Edit_Blocnote extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu (Menu menu){
 
-        // Create the top menu
-        getMenuInflater().inflate(R.menu.menu, menu);
+        // Create the top menuFavorite
+        getMenuInflater().inflate(R.menu.menu_favorite, menu);
 
         return true;
     }
@@ -129,14 +116,13 @@ public class Edit_Blocnote extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected (final MenuItem item){
-        // If a item menu is click
+        // If a item menuFavorite is click
         switch (item.getItemId()) {
 
             case R.id.favorite_icone:
 
                 Add_favorite();
                 this.invalidateOptionsMenu();
-                Log.i("Tag", "Favorite icone selected");
 
                 return true;
             default:
@@ -144,26 +130,7 @@ public class Edit_Blocnote extends ActionBarActivity {
 
         }
     }
-/**
-    @Override
-    public void invalidateOptionsMenu (){
 
-        Menu menu = (Menu)findViewById(R.menu.menu);
-
-        if (!haveFavorite) {
-            // Récupération de l'icone
-            icone_favorie = ContextCompat.getDrawable(getApplicationContext(), R.drawable.favorite);
-
-            // Changement de couleur
-            icone_favorie.setColorFilter(Color.BLACK, PorterDuff.Mode.MULTIPLY);
-
-            menu.getItem(0).setIcon(icone_favorie);
-        }
-        else {
-            menu.getItem(0).setIcon(R.drawable.favorite);
-        }
-    }
-**/
 
        private void Leave_editor(EditText note){
         /**********************************************************************************
@@ -176,7 +143,7 @@ public class Edit_Blocnote extends ActionBarActivity {
 
         // If there has no text
         if (txt.isEmpty()){
-            // End the editor menu
+            // End the editor menuFavorite
             Edit_Blocnote.this.finish();
         }
         // Do a confirmation

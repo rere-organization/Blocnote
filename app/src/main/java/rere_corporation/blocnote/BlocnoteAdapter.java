@@ -51,15 +51,10 @@ public class BlocnoteAdapter extends ArrayAdapter<Blocnote> {
         Boolean value = blocnote.getFavorite();
 
         if (value == true){
-
             viewHolder.favorite.setAlpha(1f);
-            //  viewHolder.favorite.setText("Oui");
-           // viewHolder.favorite.setAlpha(0f);
         }
         else{
             viewHolder.favorite.setAlpha(0f);
-          //  viewHolder.favorite.setText("Non");
-            //viewHolder.favorite.setImageAlpha(1);
         }
 
 
