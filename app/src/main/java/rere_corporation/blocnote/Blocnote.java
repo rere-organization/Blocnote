@@ -25,12 +25,13 @@ public class Blocnote {
     Boolean favorite;
     String date;
 
-    public static void insert(Context context, EditText note) {
+    public static void insert(Context context, EditText note, Boolean havenote) {
         /**********************************************************************************
          * Insert into the database the note
          *
          * @param context
          * @param note
+         * @param havenote
          *
          *********************************************************************************/
 
@@ -45,7 +46,7 @@ public class Blocnote {
         SQLiteDatabase db = helper.getWritableDatabase();
 
         // Put to 'values' all the data
-        values.put("favorite", Boolean.FALSE);
+        values.put("favorite", Boolean.valueOf(havenote));
         values.put("date", strDate);
         values.put("note", String.valueOf(note.getText()));
 
@@ -170,6 +171,25 @@ public class Blocnote {
         // With the same id
         String whereClause = "id=" + String.valueOf(id);
 
+
+        LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(context);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        // Request
+        db.update("NOTE", values, whereClause, null);
+        db.close();
+
+    }
+
+    public static void update_favorite(Context context, long id, Boolean haveFavorite){
+
+        ContentValues values = new ContentValues();
+
+        // We want the opposite
+        values.put("favorite", Boolean.valueOf(haveFavorite));
+
+        // With the same id
+        String whereClause = "id=" + String.valueOf(id);
 
         LocalSQLiteOpenHelper helper = new LocalSQLiteOpenHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();

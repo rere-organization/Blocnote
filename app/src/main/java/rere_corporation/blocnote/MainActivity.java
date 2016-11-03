@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +23,7 @@ import java.util.List;
 
 import static android.R.id.list;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
     /***************************************************************
      * List of all the note present in the database
      *      - Possibility to edit a blocnote
