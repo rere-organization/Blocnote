@@ -5,14 +5,13 @@ A simple application for mobile which is a Bloc Note.
 
 - Objectives
   - Save texts / notes
-  - System of search for notes
+  - Add to the favorite
   - Manage a note
 
 - Action
   - Database
     - Id
-    - Title
-    - Texts
+    - Text
     - Favorite
     - Date
   
@@ -26,3 +25,4 @@ A simple application for mobile which is a Bloc Note.
   - Bloc note layout
       - Text
       - Possibility of a list
+      - Add to the favorite
