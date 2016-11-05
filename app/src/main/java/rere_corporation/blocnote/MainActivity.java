@@ -12,6 +12,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,7 +34,6 @@ public class MainActivity extends ActionBarActivity {
     ***************************************************************/
 
     // Visible elements
-    Button add_blocnote;
     ListView Listnote;
 
 
@@ -41,21 +42,35 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        // Declaration of the button and the list
-        add_blocnote = (Button) findViewById(R.id.addBlocnote);
         Listnote     = (ListView) findViewById(R.id.main_List);
 
-        // Create a new note
-        add_blocnote.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                // Add a blocnote
-                Add_Blocnote(-1);
-            }
-        });
-
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu){
+
+        // Create the top menuFavorite
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected (final MenuItem item){
+        // If a item menuFavorite is click
+        switch (item.getItemId()) {
+
+            case R.id.add_note_icone:
+                Add_Blocnote(-1);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
 
     @Override
     protected void onResume(){

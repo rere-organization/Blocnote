@@ -38,20 +38,19 @@ public class Edit_Blocnote extends ActionBarActivity {
         setContentView(R.layout.edit_blocnote);
 
         // Get the id of the note
-        final long id = getIntent().getExtras().getLong("id");
+        idNote = getIntent().getExtras().getLong("id");
 
-        // favorite = (MenuItem)findViewById(R.id.favorite);
+
         note     = (EditText)findViewById(R.id.note);
         validate = (Button)findViewById(R.id.validate);
         cancel   = (Button)findViewById(R.id.cancel);
 
+
         // If the note exist
-        if(id != -1){
+        if(idNote != -1){
 
             // Search in the database the information of the note
-            Blocnote noteExist = Blocnote.getBlocnote(getApplicationContext(), id);
-
-            idNote = id;
+            Blocnote noteExist = Blocnote.getBlocnote(getApplicationContext(), idNote);
 
             // Note
             note.setText(noteExist.getNote());
@@ -76,7 +75,7 @@ public class Edit_Blocnote extends ActionBarActivity {
         validate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                Add_note(note, id);
+                Add_note(note, idNote);
             }
         });
 
@@ -122,7 +121,12 @@ public class Edit_Blocnote extends ActionBarActivity {
             case R.id.favorite_icone:
 
                 Add_favorite();
+                // Recreate a new optionsMenu
                 this.invalidateOptionsMenu();
+
+                return true;
+            case R.id.save_icone:
+                Add_note(note, idNote);
 
                 return true;
             default:
@@ -229,7 +233,5 @@ public class Edit_Blocnote extends ActionBarActivity {
 
 
     }
-
-
 
 }
