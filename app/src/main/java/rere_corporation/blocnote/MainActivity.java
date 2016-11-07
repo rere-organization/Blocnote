@@ -12,7 +12,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,6 +38,7 @@ public class MainActivity extends ActionBarActivity {
 
     // Visible elements
     ListView Listnote;
+    ArrayList<Blocnote> blocnotes;
 
 
     @Override
@@ -73,29 +77,64 @@ public class MainActivity extends ActionBarActivity {
 
 
     @Override
+    public void onCreateContextMenu(final ContextMenu menu, final View v, final ContextMenu.ContextMenuInfo menuInfo){
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        if (v.getId()==R.id.main_List) {
+
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_main_listselected, menu);
+
+        }
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(final MenuItem item){
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+
+        int postion = info.position;
+        // Get the id of the note
+        long idNote = blocnotes.get(postion).getId();
+        Boolean haveFavorite = blocnotes.get(postion).getFavorite();
+
+
+
+        switch (item.getItemId()){
+            case R.id.menuEditNote:
+                Add_Blocnote(idNote);
+                return true;
+
+            case R.id.menuAddFavorite:
+                addFavoriteNote(idNote, haveFavorite);
+                return true;
+
+            case R.id.menuDeleteNote:
+                    delete_Blocnote(idNote);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+
+        }
+
+    }
+
+
+
+    @Override
     protected void onResume(){
         super.onResume();
 
         // Generate the array of all notes
-        final ArrayList<Blocnote> blocnotes = genererNotes();
+        blocnotes = genererNotes();
 
         final BlocnoteAdapter adapter = new BlocnoteAdapter(MainActivity.this, blocnotes);
         Listnote.setAdapter(adapter);
 
+        // Context menu
+        registerForContextMenu(Listnote);
 
-        // Delete the note
-        Listnote.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get the id of the note
-                long idNote = blocnotes.get(position).getId();
-
-                // Delete the note
-                delete_Blocnote(idNote);
-
-                return true;
-            }
-        });
 
         // Edit the note
         Listnote.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -173,5 +212,15 @@ public class MainActivity extends ActionBarActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    public void addFavoriteNote(long id, Boolean haveFavorite){
+
+        haveFavorite = !haveFavorite;
+
+        Blocnote.update_favorite(getApplicationContext(), id, haveFavorite);
+
+        onResume();
+    }
+
 
 }

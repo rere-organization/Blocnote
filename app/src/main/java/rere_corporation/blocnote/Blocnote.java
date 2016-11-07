@@ -81,7 +81,7 @@ public class Blocnote {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         // Create the request
-        Cursor cursor = db.query(true, "NOTE", new String[]{"id", "favorite", "note", "date"}, null, null, null, null, "date DESC", null );
+        Cursor cursor = db.query(true, "NOTE", new String[]{"id", "favorite", "note", "date"}, null, null, null, null, "date DESC, favorite = 1 ", null );
 
         // Add to the array all notes
         while (cursor.moveToNext()) {
