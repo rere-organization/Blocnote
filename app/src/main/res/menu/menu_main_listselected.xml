@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="EditNote"
+        android:id="@+id/menuEditNote"/>
+
+    <item android:title="AddFavorie"
+        android:id="@+id/menuAddFavorite"/>
+
+    <item android:title="DeleteNote"
+        android:id="@+id/menuDeleteNote"/>
+
+</menu>
