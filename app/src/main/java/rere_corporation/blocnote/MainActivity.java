@@ -1,45 +1,37 @@
 package rere_corporation.blocnote;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static android.R.id.list;
-
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     /***************************************************************
      * List of all the note present in the database
      *      - Possibility to edit a blocnote
      *      - Possibility to create a new blocnote
      *      - Possibility to delete a note
+     *      - Possibility to change background color
+     *      - Possibility to add in favorite
     ***************************************************************/
+
+/* ********************************************************************************************** */
 
     // Visible elements
     ListView Listnote;
     ArrayList<Blocnote> blocnotes;
 
+/* ********************************************************************************************** */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+/* ********************************************************************************************** */
 
     @Override
     public boolean onCreateOptionsMenu (Menu menu){
@@ -60,6 +53,7 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
+/* ********************************************************************************************** */
 
     @Override
     public boolean onOptionsItemSelected (final MenuItem item){
@@ -75,9 +69,14 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+/* ********************************************************************************************** */
 
     @Override
     public void onCreateContextMenu(final ContextMenu menu, final View v, final ContextMenu.ContextMenuInfo menuInfo){
+        /*******************************************************************************************
+         * Create the option menu
+         * Adjust the text of menu item if the note is in favorite
+         ******************************************************************************************/
         super.onCreateContextMenu(menu, v, menuInfo);
 
         if (v.getId()==R.id.main_List) {
@@ -85,20 +84,39 @@ public class MainActivity extends ActionBarActivity {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.menu_main_listselected, menu);
 
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            int position = info.position;
+
+            Boolean haveFavorite = blocnotes.get(position).getFavorite();
+
+            if (haveFavorite) {
+                MenuItem textFavorie = (MenuItem) menu.findItem(R.id.menuAddFavorite);
+                String removeFavorite = getResources().getString(R.string.RemoveFavorite);
+                textFavorie.setTitle(removeFavorite);
+            }
+
         }
 
     }
 
+/* ********************************************************************************************** */
+
     @Override
     public boolean onContextItemSelected(final MenuItem item){
+        /*******************************************************************************************
+         * Manage the click on the menu
+         * - Edit the note
+         * - Add in favorite
+         * - Change the color
+         * - Delete the note
+         ******************************************************************************************/
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
 
-        int postion = info.position;
+        int position = info.position;
         // Get the id of the note
-        long idNote = blocnotes.get(postion).getId();
-        Boolean haveFavorite = blocnotes.get(postion).getFavorite();
-
+        long idNote = blocnotes.get(position).getId();
+        Boolean haveFavorite = blocnotes.get(position).getFavorite();
 
 
         switch (item.getItemId()){
@@ -108,6 +126,10 @@ public class MainActivity extends ActionBarActivity {
 
             case R.id.menuAddFavorite:
                 addFavoriteNote(idNote, haveFavorite);
+                return true;
+
+            case R.id.menuChangeColor:
+                changeColor(idNote);
                 return true;
 
             case R.id.menuDeleteNote:
@@ -120,10 +142,15 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-
+/* ********************************************************************************************** */
 
     @Override
     protected void onResume(){
+        /*******************************************************************************************
+         * Generate the list of blocnote
+         * Manage the click (simple) on the item
+         ******************************************************************************************/
+
         super.onResume();
 
         // Generate the array of all notes
@@ -147,6 +174,7 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+/* ********************************************************************************************** */
 
     private ArrayList<Blocnote> genererNotes(){
         /*************************************************************
@@ -158,13 +186,13 @@ public class MainActivity extends ActionBarActivity {
         return blocnoteList;
     }
 
+/* ********************************************************************************************** */
 
     private void Add_Blocnote(long id){
         /*************************************************************
          * Change the layout for the blocnote editor
          *
          * @param id
-         *
          ************************************************************/
 
         // Call the class Edit_Blocnote
@@ -173,6 +201,7 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+/* ********************************************************************************************** */
 
     private void delete_Blocnote(final long id){
         /*************************************************************
@@ -180,14 +209,16 @@ public class MainActivity extends ActionBarActivity {
          * Create a layout Yes / No
          *
          * @param id
-         *
          ************************************************************/
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do you want to delete this note ?");
 
+        String deleteQuestion = getResources().getString(R.string.DeleteQuestion);
+        builder.setMessage(deleteQuestion);
 
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        String textYes = getResources().getString(R.string.Yes);
+
+        builder.setPositiveButton(textYes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Delete the note
                 Blocnote.delete(getApplicationContext(), id);
@@ -200,7 +231,9 @@ public class MainActivity extends ActionBarActivity {
         });
 
 
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        String textNo = getResources().getString(R.string.No);
+
+        builder.setNegativeButton(textNo, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Just quit the dialog
@@ -213,7 +246,13 @@ public class MainActivity extends ActionBarActivity {
         alert.show();
     }
 
+/* ********************************************************************************************** */
+
     public void addFavoriteNote(long id, Boolean haveFavorite){
+        /*******************************************************************************************
+         * Add / Remove in favorite the note
+         *
+         ******************************************************************************************/
 
         haveFavorite = !haveFavorite;
 
@@ -222,5 +261,16 @@ public class MainActivity extends ActionBarActivity {
         onResume();
     }
 
+/* ********************************************************************************************** */
+
+    public void changeColor(long idNote){
+        /*******************************************************************************************
+         * Select the new color
+         * -> Call 'Edit_Blocnote'
+         ******************************************************************************************/
+        Intent intent = new Intent(this, ChangeColor.class);
+        intent.putExtra("idNote", idNote);
+        startActivity(intent);
+    }
 
 }

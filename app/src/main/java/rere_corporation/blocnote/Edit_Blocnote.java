@@ -3,43 +3,52 @@ package rere_corporation.blocnote;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-/**
- * Created by rere on 14/10/16.
- */
+public class Edit_Blocnote extends AppCompatActivity {
+    /***********************************************************************************************
+     * Edit Blocnote Activity
+     * Mangage : - the note
+     *              - Save / Update
+     *           - the favorite
+     *              - Add / Remove
+     *           - the color
+     **********************************************************************************************/
 
-public class Edit_Blocnote extends ActionBarActivity {
+/* ********************************************************************************************** */
 
-    // Déclare élements
-    EditText note;
-    Button validate;
-    Button cancel;
-    Boolean haveFavorite;
-    Drawable icone_favorie;
-    long idNote;
+    private EditText note;
+    private Button   validate;
+    private Button   cancel;
+    private Boolean  haveFavorite;
+    private Drawable icone_favorie;
+    private long     idNote;
+    private int      color;
 
-
+/* ********************************************************************************************** */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        /*******************************************************************************************
+         * Create note editing activity
+         * Adjust the note, favorie icon
+         ******************************************************************************************/
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_blocnote);
 
         // Get the id of the note
         idNote = getIntent().getExtras().getLong("id");
-
 
         note     = (EditText)findViewById(R.id.note);
         validate = (Button)findViewById(R.id.validate);
@@ -81,9 +90,13 @@ public class Edit_Blocnote extends ActionBarActivity {
 
     }
 
+/* ********************************************************************************************** */
 
     @Override
     public boolean onPrepareOptionsMenu (Menu menu){
+        /*******************************************************************************************
+         * Set the color of the favorite icon
+         ******************************************************************************************/
         super.onPrepareOptionsMenu(menu);
         // Set the color of the icon
 
@@ -103,18 +116,24 @@ public class Edit_Blocnote extends ActionBarActivity {
         return true;
     }
 
+/* ********************************************************************************************** */
+
     @Override
     public boolean onCreateOptionsMenu (Menu menu){
 
         // Create the top menuFavorite
-        getMenuInflater().inflate(R.menu.menu_favorite, menu);
+        getMenuInflater().inflate(R.menu.menu_blocnote_selected, menu);
 
         return true;
     }
 
+/* ********************************************************************************************** */
 
     @Override
     public boolean onOptionsItemSelected (final MenuItem item){
+        /*******************************************************************************************
+         * Manage the click on the menu
+         ******************************************************************************************/
         // If a item menuFavorite is click
         switch (item.getItemId()) {
 
@@ -125,6 +144,11 @@ public class Edit_Blocnote extends ActionBarActivity {
                 this.invalidateOptionsMenu();
 
                 return true;
+
+            case R.id.color_icone:
+                SelectColor();
+                return true;
+
             case R.id.save_icone:
                 Add_note(note, idNote);
 
@@ -135,6 +159,7 @@ public class Edit_Blocnote extends ActionBarActivity {
         }
     }
 
+/* ********************************************************************************************** */
 
        private void Leave_editor(EditText note){
         /**********************************************************************************
@@ -154,10 +179,13 @@ public class Edit_Blocnote extends ActionBarActivity {
         else{
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Are you sure ?");
 
+            String confirmationQuestion = getResources().getString(R.string.ConfirmationQuestion);
+            builder.setMessage(confirmationQuestion);
 
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            String textYes = getResources().getString(R.string.Yes);
+
+            builder.setPositiveButton(textYes, new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int which) {
                     // Leave the edit blocnote
@@ -168,7 +196,9 @@ public class Edit_Blocnote extends ActionBarActivity {
 
             });
 
-            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            String textNo = getResources().getString(R.string.No);
+
+            builder.setNegativeButton(textNo, new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -182,6 +212,8 @@ public class Edit_Blocnote extends ActionBarActivity {
 
         }
     }
+
+/* ********************************************************************************************** */
 
     private void Add_note (EditText note, long id){
         /**********************************************************************************
@@ -214,14 +246,19 @@ public class Edit_Blocnote extends ActionBarActivity {
             }
             else {
                 // Insert data in the database
-                Blocnote.insert(context, note, haveFavorite);
+                Blocnote.insert(context, note, haveFavorite, color);
             }
             // Finish the editor mode
             Edit_Blocnote.this.finish();
         }
     }
 
+/* ********************************************************************************************** */
+
     public void Add_favorite (){
+        /*******************************************************************************************
+         * Add or Remove the note in favorite
+         ******************************************************************************************/
 
         haveFavorite = !haveFavorite;
 
@@ -231,7 +268,32 @@ public class Edit_Blocnote extends ActionBarActivity {
             Blocnote.update_favorite(getApplicationContext(), idNote, haveFavorite);
         }
 
+    }
+
+/* ********************************************************************************************** */
+
+    public void SelectColor(){
+
+        Intent intent = new Intent(this, ChangeColor.class);
+        intent.putExtra("idNote", idNote);
+
+        if (idNote != -1){
+            startActivity(intent);
+        }
+        else {
+            startActivityForResult(intent, 1);
+        }
 
     }
 
+/* ********************************************************************************************** */
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode != RESULT_CANCELED) {
+            color = data.getIntExtra("idColor", -1);
+        }
+    }
 }
