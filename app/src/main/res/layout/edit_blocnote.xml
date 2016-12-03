@@ -7,7 +7,7 @@
     android:weightSum="1">
 
     <TextView
-        android:text="Note"
+        android:text="@string/Note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/texte_note"
@@ -27,14 +27,6 @@
             android:id="@+id/note" />
 
     </ScrollView>
-    <!-- Button -->
-    <!--
-    In LinearLayout :
-    - Orientation = horizontal;
-        -> In Button :
-        - layout_weight -> 1
-        /* Take all the place that he can */
-    -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,7 +35,7 @@
         android:weightSum="1">
 
         <Button
-            android:text="Cancel"
+            android:text="@string/Cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cancel"
@@ -51,7 +43,7 @@
             android:layout_weight="0.5"/>
 
         <Button
-            android:text="Validate"
+            android:text="@string/Validate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/validate"

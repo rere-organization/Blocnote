@@ -4,14 +4,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:id="@+id/list_itemBlocnote_layout"
+    android:weightSum="1"
+    android:layout_marginBottom="5dp">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="1" >
+        android:weightSum="1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -19,11 +21,12 @@
             android:id="@+id/listItemBlocnote_note"
             android:maxLines="1"
             android:ellipsize="end"
-            android:textSize="20dp"
+            android:textSize="22dp"
             android:layout_gravity="top|left"
             android:layout_weight="0.9"
-            android:paddingTop="8dp"
+            android:paddingTop="6dp"
             android:paddingBottom="4dp"
+            android:paddingLeft="10dp"
             android:gravity="left"/>
 
         <ImageView
@@ -33,21 +36,8 @@
             android:id="@+id/listItemBlocnote_favorie"
             android:layout_gravity="top|right"
             android:layout_weight="0.1"
-            android:paddingTop="8dp"
+            android:paddingTop="11dp"
             android:paddingBottom="4dp"/>
-
-<!--
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/listItemBlocnote_favorie"
-            android:layout_gravity="top|right"
-            android:layout_weight="0.1"
-            android:textSize="20dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="4dp"/>
--->
-
 
     </LinearLayout>
         <!-- Date -->
@@ -59,6 +49,7 @@
             android:textSize="10dp"
             android:textStyle="italic"
             android:paddingBottom="8dp"
+            android:paddingLeft="10dp"
             android:maxLines="1"
             android:width="100dp"/>
 
