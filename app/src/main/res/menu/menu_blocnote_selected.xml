@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/favorite_icone"
+        android:icon="@drawable/favorite"
+        android:title="@string/favorite"
+        app:showAsAction="always"
+        android:visible="true" />
+
+    <item android:id="@+id/color_icone"
+        android:icon="@drawable/paint_board"
+        android:title="@string/color"
+        app:showAsAction="always"
+        android:visible="true" />
+
+    <item android:id="@+id/save_icone"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="@string/Save"
+        app:showAsAction="always"
+        android:visible="true" />
+
+</menu>

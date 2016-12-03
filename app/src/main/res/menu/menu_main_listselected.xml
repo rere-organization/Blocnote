@@ -2,13 +2,16 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="EditNote"
+    <item android:title="@string/EditNote"
         android:id="@+id/menuEditNote"/>
 
-    <item android:title="AddFavorie"
+    <item android:title="@string/AddFavorie"
         android:id="@+id/menuAddFavorite"/>
 
-    <item android:title="DeleteNote"
+    <item android:title="@string/ChangeColor"
+        android:id="@+id/menuChangeColor"/>
+
+    <item android:title="@string/DeleteNote"
         android:id="@+id/menuDeleteNote"/>
 
 </menu>
